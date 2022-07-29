@@ -1,0 +1,101 @@
+import sys
+import rds_config
+import pymysql
+import logging
+import json 
+#rds settings
+
+rds_host  = "database-pruebas.cqrw3jsnmaks.us-west-1.rds.amazonaws.com"
+name = rds_config.db_username
+password = rds_config.db_password
+db_name = rds_config.db_name
+
+
+try:
+    conn = pymysql.connect(host=rds_host, user=name, passwd=password, db=db_name, connect_timeout=5)
+except pymysql.MySQLError as e:
+    print("ERROR: Unexpected error: Could not connect to MySQL instance.")
+    print(e)
+    sys.exit()
+
+print("SUCCESS: Connection to RDS MySQL instance succeeded")
+
+
+def CalMayor(lista):
+    concatenador = []
+    if len(lista) != 0:
+        nombre, mayor = max(lista, key=lambda item: item[1])
+        for e in lista:
+            if e[1] == mayor:
+                concatenador.append(str(e[0]))
+        return concatenador
+    else:
+        return ["VOID"]
+    
+def CalMayorFecha(lista):
+    concatenador = []
+    nombre, mayor = max(lista, key=lambda item: item[1])
+    for e in lista:
+        if e[1] == mayor:
+            concatenador.append(str(e[0]))
+    return concatenador
+
+def CalAeropuerto():
+    resultAeroouerto = []
+    MaxAeropuerto = []
+    with conn.cursor() as cur:
+        cur.execute("select DISTINCT aeropuertos.nombre_aeropuerto, count(vuelos.id_aeropuerto) AS mas_popular  from vuelos, aeropuertos where vuelos.id_aeropuerto = aeropuertos.ida_aeropuerto group by id_aeropuerto having count(vuelos.id_movimiento) order by count(id_aeropuerto) DESC")
+        for row in cur:
+            resultAeroouerto.append(list(row))
+    MaxAeropuerto = CalMayor(resultAeroouerto)
+    return MaxAeropuerto 
+
+def CalAerolinea():
+    resultAerolinea = []
+    MaxAerolinea = []
+    with conn.cursor() as cur:
+        cur.execute("select DISTINCT aerolíneas.nombre_aerolinea, count(vuelos.id_aerolinea) AS mas_popular  from vuelos, aerolíneas where vuelos.id_aerolinea = aerolíneas.id_aerolineas and vuelos.id_movimiento = 1 group by id_aerolinea order by count(id_aerolinea) DESC")
+        for row in cur:
+            resultAerolinea.append(list(row))
+    MaxAerolinea = CalMayor(resultAerolinea)
+    return MaxAerolinea
+
+def NumVuelos():
+    resultVuelos = []
+    MaxVuelos = []
+    with conn.cursor() as cur:
+        cur.execute("select DISTINCT vuelos.dia, count(vuelos.id_movimiento) from vuelos where vuelos.id_movimiento = 1 group by vuelos.dia order by count(vuelos.dia) DESC")
+        for row in cur:
+            resultVuelos.append(list(row))
+    MaxVuelos = CalMayor(resultVuelos)
+    return MaxVuelos
+    
+def vuelosDosDia():
+    resultDosDia = []
+    MaxDosDia = []
+    with conn.cursor() as cur:
+        cur.execute("select DISTINCT aerolíneas.nombre_aerolinea, count(vuelos.id_movimiento), vuelos.dia from vuelos, aerolíneas where vuelos.id_aerolinea = aerolíneas.id_aerolineas and vuelos.id_movimiento = 1  group by id_aerolinea, dia having count(vuelos.id_movimiento) > 2 order by dia ")
+        for row in cur:
+            resultDosDia.append(list(row))
+    MaxDosDia = CalMayor(resultDosDia)
+    return MaxDosDia
+
+
+def lambda_handler(event, context):
+    result = {}
+    
+    print("Data from RDS")
+    print(CalAeropuerto())
+    print(CalAerolinea())
+    print(NumVuelos())
+    print(vuelosDosDia())
+    print(result)
+    
+    result = {"items":[{"Aeropuerto":CalAeropuerto(), "Aerolineas":CalAerolinea(), "Vuelos": NumVuelos(), "VuelosDos": vuelosDosDia()}]}
+    
+    conn.commit()
+        
+    return {
+        'statusCode':200,
+        'body':json.dumps(result)
+    }

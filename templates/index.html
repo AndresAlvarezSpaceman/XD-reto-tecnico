@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" /> 
+</head>
+<body>
+
+    <script>
+        console.log("La respuesta con menor numero de vistas es la numero {{ outMenorNum }} con :  {{outMenCan}}  views");
+        console.log("El owner que más se repite en las respuestas es:  {{ outOwn }}");
+        console.log("Se encontraron {{ outResTrue }} respuestas de verdadero y {{ outResFals }} respuestas de falso");
+        console.log("La respuesta más nueva es la numero {{ outNumNew }} con el valor de : {{ outTimNew }}");
+        console.log("La respuesta más antigua es la numero {{ outNumOld }} con el valor de : {{ outTimOld }}");
+    </script>
+
+    <header id="titulo">
+        <h1 id="titulo">XD Reto técnico</h1>
+    </header>
+    
+    <section class="conteiner">
+        <article class="post">
+            <h2>Preguntas 1 a 6</h2>
+            <p>{{ peticion }}</p>
+            
+            <p>La respuesta con menor numero de vistas es la numero {{ outMenorNum }} con :  {{outMenCan}}  views</p>
+            <p>El owner que más se repite en las respuestas es:  {{ outOwn }}</p>            
+            <p>Se encontraron {{ outResTrue }} respuestas de verdadero y {{ outResFals }} respuestas de falso</p>
+            <p>La respuesta más nueva es la numero {{ outNumNew }} con el valor de : {{ outTimNew }}</p>
+            <p>La respuesta más antigua es la numero {{ outNumOld }} con el valor de : {{ outTimOld }}</p>
+            
+            <!--  -->
+        </article>
+        <article class="post">
+            <h2>Preguntas 7 a 10</h2>
+            <p>Aeropuerto que ha tenido mayor movimiento durante el año: {{ outAeropuerto }}</p>
+            <p>Nombre aerolínea que ha realizado mayor número de vuelos durante el año: {{ outAerolinea }}</p>
+            <p>Día que han tenido mayor número de vuelos: {{ outVuelos }}</p>
+            <p>Aerolíneas que tienen mas de 2 vuelos por día: {{ outVuelosDos }}</p>
+            
+            <!--  -->
+        </article>
+    </section>
+</body>
+</html>
