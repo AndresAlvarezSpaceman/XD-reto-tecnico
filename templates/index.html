@@ -4,10 +4,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" /> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" />  <!-- Mandamos llamar la carpeta de Css -->
 </head>
 <body>
-
+     <!-- Imprimimos los en la consola los respuestas 2 a 5 -->
     <script>
         console.log("La respuesta con menor numero de vistas es la numero {{ outMenorNum }} con :  {{outMenCan}}  views");
         console.log("El owner que más se repite en las respuestas es:  {{ outOwn }}");
@@ -24,14 +24,14 @@
         <article class="post">
             <h2>Preguntas 1 a 6</h2>
             <p>{{ peticion }}</p>
-            
+             <!-- Anexamos los valores devueltos por python -->
             <p>La respuesta con menor numero de vistas es la numero {{ outMenorNum }} con :  {{outMenCan}}  views</p>
             <p>El owner que más se repite en las respuestas es:  {{ outOwn }}</p>            
             <p>Se encontraron {{ outResTrue }} respuestas de verdadero y {{ outResFals }} respuestas de falso</p>
             <p>La respuesta más nueva es la numero {{ outNumNew }} con el valor de : {{ outTimNew }}</p>
             <p>La respuesta más antigua es la numero {{ outNumOld }} con el valor de : {{ outTimOld }}</p>
             
-            <!--  -->
+            <!-- Anexamos los valores devueltos por python -->
         </article>
         <article class="post">
             <h2>Preguntas 7 a 10</h2>
